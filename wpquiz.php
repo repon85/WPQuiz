@@ -32,6 +32,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 
 require_once plugin_dir_path( __FILE__ ) . 'admin/class.wpquiz.admin.php';
+require_once plugin_dir_path( __FILE__ ) . 'admin/class.wpquiz.php';
 
 function activate_wpquiz() {
 }

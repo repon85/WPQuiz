@@ -1,7 +1,19 @@
- import React from 'react';
- import ReactDOM from 'react-dom';
- import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import { HashRouter, Route } from "react-router-dom";
 
-if ( document.getElementById("wpquiz-app") ) {
-    ReactDOM.render(<App />, document.getElementById("wpquiz-app"));
+import App from "./App";
+import Quiz from './Quiz';
+
+const WPQuizApp = () => {
+  return (
+    <HashRouter>
+      <Route exact path="/" component={App} />
+      <Route exact path="/:id/:quiz" component={Quiz} />
+    </HashRouter>
+  );
+};
+
+if (document.getElementById("wpquiz-app")) {
+  ReactDOM.render(<WPQuizApp />, document.getElementById("wpquiz-app"));
 }
