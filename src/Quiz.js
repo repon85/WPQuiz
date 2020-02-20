@@ -4,9 +4,7 @@ import Question from "./Question";
 const axios = require("axios").default;
 const qs = require('qs');
 
-
 const Quiz = props => {
-  let [refresh, setRefresh] = useState(Date.now());
 
   const [quiz, setQuiz] = useState({
     add: false,
@@ -56,10 +54,6 @@ const Quiz = props => {
     <React.Fragment>
       <div className="wpquiz-header">
         <h2>WPQuiz Builder</h2>
-      </div>
-
-      <div className="wpquiz-page-header">
-        <h2 onClick={() => setRefresh(Date.now())}>Your Quizzes</h2>
       </div>
 
       <div className="wpquiz">

@@ -8,10 +8,12 @@ const Question = props => {
 
   const { label, answers } = question;
 
-  useEffect(() => setQuestion({...question, ...props.question }), [props.question]);
+  useEffect(() => setQuestion({ ...question, ...props.question }), [
+    props.question
+  ]);
 
   const update = data => {
-    props.update({...data}, props.index);
+    props.update({ ...data }, props.index);
   };
 
   const addAnswer = () => {
@@ -21,30 +23,33 @@ const Question = props => {
     }
 
     answers.push({ label: "" });
-    update({label, answers});
+    update({ label, answers });
   };
 
   const updateAnswer = (value, i) => {
     answers[i].label = value;
-    update({label, answers});
+    update({ label, answers });
   };
 
   return (
     <div className="question">
-      <div className="label">
-        <h3>Question</h3>
-        Choose the variables from which SmartCrawl will automatically generate
-        your SEO title from.
-      </div>
+      <h3 className="label">Question</h3>
       <input
         defaultValue={question.label}
-        onChange={e => update({...question, label: e.target.value})}
+        onChange={e => update({ ...question, label: e.target.value })}
         placeholder="Write question here"
       />
 
       <div className="label">
         <h3>Answers</h3>
-        <span className="wpquiz-btn" onClick={addAnswer.bind(this)}>Add answer</span>
+        You may add many answer by clicking on below button.
+        <div className="gap-5" />
+        <span
+          className="wpquiz-btn purple small"
+          onClick={addAnswer.bind(this)}
+        >
+          Add New
+        </span>
       </div>
       <ul className="answers">
         {question.answers.map((q, i) => (
