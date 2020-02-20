@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
+import Question from "./Question";
 
 const axios = require("axios").default;
+const qs = require('qs');
+
 
 const Quiz = props => {
   let [refresh, setRefresh] = useState(Date.now());
 
   const [quiz, setQuiz] = useState({
-    post_title: ''
+    add: false,
+    ID: 0,
+    saving: false,
+    post_title: "",
+    questions: []
   });
+
+  const { questions } = quiz;
 
   useEffect(() => {
     axios
@@ -18,13 +27,30 @@ const Quiz = props => {
         }
       })
       .then(result => {
-        setQuiz(result.data);
+        const questions = Array.isArray(result.data['questions']) ? result.data['questions'] : []
+        setQuiz({...quiz, ...result.data, questions});
       })
       .catch(err => console.log(err));
 
-  }, [refresh, props.match.params["quiz"]]);
+  }, [props.match.params["quiz"]]);
 
-  console.log(quiz);
+  const sanitizeQuestion = (question) => Object.assign({label: "", answers: []}, question)
+
+  const saveQuiz = () => {
+    setQuiz({...quiz, saving: true})
+    axios.post(`${WPQuiz.url}?action=save_quiz`, qs.stringify(quiz))
+    .finally(() => setQuiz({...quiz, saving: false}));
+  }
+
+  const addQuestion = () => {
+    questions.push({label: "", answers: []});
+    setQuiz({...quiz, questions})
+  }
+
+  const updateQuestion = (data, index) => {
+    questions[index] = data;
+    setQuiz({...quiz, questions})
+  }
 
   return (
     <React.Fragment>
@@ -37,25 +63,16 @@ const Quiz = props => {
       </div>
 
       <div className="wpquiz">
-          <header>
-              <h3>{quiz.post_title}</h3>
-          </header>
+        <header>
+          <h3>{quiz.post_title}</h3>
+          <span class="dashicons dashicons-plus" onClick={addQuestion.bind(this)}></span>
+          <span style={{marginLeft: 'auto'}} className={`btn-save wpquiz-btn ${quiz.saving && 'saving'}`} onClick={saveQuiz.bind(this)}>
+            <span class="dashicons dashicons-image-rotate"></span>
+            Save Quiz
+          </span>
+        </header>
 
-          <div className="question">
-
-              <div className="label">
-                <h3>Question</h3>
-                Choose the variables from which SmartCrawl will automatically generate your SEO title from.
-              </div>              
-                <input />
-
-                <h3 className="label">Answers</h3>
-                <div className="answers">
-                    
-                </div>
-          </div>
-
-
+        {questions.map((q, i) => <Question update={updateQuestion} key={i} index={i} question={sanitizeQuestion(q)} />)}
       </div>
     </React.Fragment>
   );

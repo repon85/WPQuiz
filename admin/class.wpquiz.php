@@ -15,16 +15,14 @@ class WP_Quiz {
     }
 
     function save_quiz() {
-        $get_post_id = isset($_REQUEST['id']) ? absint($_REQUEST['id']) : false;
+        $post = $_POST;
+        $questions = isset($post['questions']) ? $post['questions'] : array();
+        unset($post['questions']);
         
-        $post = wp_insert_post(array(
-            'ID'                => $get_post_id,
-            'post_title'        => ''
-        ));
-
-        update_post_meta($post, 'question', null);
+        $post_id = wp_insert_post($post);
+        update_post_meta($post_id, 'questions', $questions);
         
-        wp_send_json($post);
+        wp_send_json($questions);
     }
     
     function get_quizzes() {
@@ -43,9 +41,8 @@ class WP_Quiz {
         }
 
         $quiz = get_post($post_id);
-
         if ( $quiz ) {
-            $quiz->questions = get_post_meta($post_id, 'question');
+            $quiz->questions = get_post_meta($post_id, 'questions', true);
         }
         
 
