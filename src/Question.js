@@ -51,7 +51,7 @@ const Question = props => {
             <ul className="wpquiz-repeater answers">
                 <li className="head">
                     <span className="number">Score</span>
-                    <span className="main">Title</span>
+                    <span className="main">Answer</span>
                 </li>
                 {answers.map((q, i) => (
                     <li contenteditable={true} key={i} data-no={i + 1}>
@@ -65,7 +65,7 @@ const Question = props => {
                         <input
                             className="main"
                             value={q.label}
-                            placeholder="Title"
+                            placeholder="Answer"
                             onChange={e => updateAnswer({ label: e.target.value }, i)}
                         />
 

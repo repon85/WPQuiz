@@ -1,0 +1,45 @@
+.wpquiz-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.wpquiz-wrapper .wpq-question-item {
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    width: 100%;
+    pointer-events: none;
+    transition: all 500ms;
+}
+
+.wpquiz-wrapper:not(.initialized) .wpq-question-item:first-child,
+.wpquiz-wrapper .wpq-question-item.active {
+    position: static;
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+
+
+
+.wpq-question-item .quiz-question {text-align: center; font-weight: 700; font-size: 30px;}
+
+.quiz-answers {
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+.quiz-answers .quiz-answer {
+    margin: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 8px 25px;
+    display: inline-block;
+    background-color: #135EC7;
+    border-radius: 100px;
+}

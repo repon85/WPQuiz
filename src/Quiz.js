@@ -13,9 +13,10 @@ const Quiz = props => {
         saving: false,
         post_title: "",
         post_content: "",
-        redirect: 'http://growsured.me/2020/01/20/hello-world/',
+        redirect: '',
         redirects: [],
-        questions: []
+        questions: [],
+        quiz_button: ''
     });
 
     const { redirect, redirects, questions } = quiz;
@@ -29,10 +30,11 @@ const Quiz = props => {
                 }
             })
             .then(result => {
-                const questions = Array.isArray(result.data["questions"])
-                    ? result.data["questions"]
-                    : [];
-                setQuiz({ ...quiz, ...result.data, questions });
+                const data = result.data;
+                ['questions', 'redirects'].forEach(key => {
+                    data[key] = Array.isArray(data[key]) ? result.data[key] : [];
+                })
+                setQuiz({ ...quiz, ...data });
             })
             .catch(err => console.log(err));
     }, [props.match.params["quiz"]]);
@@ -45,7 +47,7 @@ const Quiz = props => {
         }
 
         const has = redirects.findIndex(u => !validator.isURL(u.url));
-        if ( has > -1 ) {
+        if (has > -1) {
             return alert("One or more redirect URL is not valid.");
         }
 
@@ -55,12 +57,16 @@ const Quiz = props => {
             .finally(() => setQuiz({ ...quiz, saving: false }));
     };
 
-    const add_url = () => {
-        redirects.push({ min: '', max: '', url: "" });
-        setQuiz({...quiz, redirects})
+    const update = (key, value) => {
+        setQuiz({ ...quiz, [key]: value })
     }
 
-    const handleUrl = (redirects) => setQuiz({...quiz, redirects})
+    const add_url = () => {
+        redirects.push({ min: '', max: '', url: "" });
+        setQuiz({ ...quiz, redirects })
+    }
+
+    const handleUrl = (redirects) => setQuiz({ ...quiz, redirects })
 
     const addQuestion = () => {
         questions.push({ label: "", answers: [] });
@@ -72,12 +78,10 @@ const Quiz = props => {
         setQuiz({ ...quiz, questions });
     };
 
-    console.log(quiz);
-
     return (
         <React.Fragment>
             <div className="wpquiz-header">
-                <h2>WPQuiz Builder</h2>
+                <h2 className="title">WPQuiz Builder</h2>
             </div>
 
             <div className="wpbox">
@@ -97,11 +101,11 @@ const Quiz = props => {
                     <textarea rows={3} />
 
                     <div className="label">
-                        <h3 className="title">Start Quiz Button Text</h3>
+                        <h3 className="title">Quiz Button Text</h3>
                         Default text is "<strong>Start Quiz</strong>". If You want to customize text write on right field
                     </div>
 
-                    <input />
+                    <input onChange={(e) => update('quiz_button', e.target.value)} defaultValue={quiz.quiz_button} />
 
                     <div className="label">
                         <h3 className="title">Redirect URL</h3>
@@ -111,9 +115,9 @@ const Quiz = props => {
                     </div>
 
                     <div>
-                        <input defaultValue={redirect} onChange={(e) => setQuiz({ ...quiz, redirect: e.target.value })} className="block" type="url" />
+                        <input defaultValue={redirect} onChange={(e) => update('redirect', e.target.value)} className="block" type="url" />
                         <div className="gap" />
-                        {redirects.length > 0 && <Redirect update={handleUrl.bind(this)} redirects={redirects} />}
+                        {(redirects && redirects.length > 0) && <Redirect update={handleUrl.bind(this)} redirects={redirects} />}
                     </div>
 
                 </div>

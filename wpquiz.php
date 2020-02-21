@@ -31,7 +31,10 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class.wpquiz.core.php';
+$WP_Quiz = new WP_Quiz();
+
 require_once plugin_dir_path( __FILE__ ) . 'admin/class.wpquiz.admin.php';
+require_once plugin_dir_path( __FILE__ ) . 'frontend/wpquiz.frontend.php';
 
 function activate_wpquiz() {
 }
@@ -42,9 +45,4 @@ function deactivate_wpquiz() {
 
 register_activation_hook( __FILE__, 'activate_wpquiz' );
 register_deactivation_hook( __FILE__, 'deactivate_wpquiz' );
-
-$WP_Quiz = new WP_Quiz();
-new WPQuiz_Admin();
-
-add_shortcode( 'wpquiz', array($WP_Quiz, 'wpquiz_shortcode'));
 

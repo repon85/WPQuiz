@@ -22,32 +22,28 @@ class WP_Quiz {
     }
 
 	function get_quiz($id) {
-		$quiz = get_post($id);		
-        if ( $quiz ) {
-			$quiz->questions = get_post_meta($quiz->ID, 'questions', true);
-			if ( !is_array($quiz->questions) ) {
-				$quiz->questions = array();
-			}
-		}
-		
-		foreach ($quiz->questions as $key => &$question) {
+        $quiz = get_post($id);
+        if ( !$quiz ) {
+            return $quiz;
+        }	
+        
+        $metas = ['questions', 'quiz_button', 'redirect', 'redirects'];
+        foreach ($metas as $key) {
+            $quiz->$key = get_post_meta($quiz->ID, $key, true);
+        }
+
+        if ( !is_array($quiz->questions) ) {
+            $quiz->questions = array();
+        }
+
+        foreach ($quiz->questions as $key => &$question) {
 			foreach ($question['answers'] as $ak => &$answer) {
 				$answer['score'] = isset($answer['score']) && strlen($answer['score']) > 0 ? absint($answer['score']) : '';
 			}
-		}
+        }
 
 		return $quiz;
 	}
 
-	function wpquiz_shortcode($atts) {
-		$atts = shortcode_atts( array(
-			'id' => null
-		), $atts);
-
-		$quiz = $this->get_quiz($atts['id']);        
-
-		var_dump($quiz->questions);
-	 
-		return null;
-	}
+	
 }

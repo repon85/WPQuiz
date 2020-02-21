@@ -20,7 +20,6 @@ const Redirect = props => {
         props.update(redirects)
     }
 
-    console.log(props);
     return (
         <ul className="wpquiz-repeater wpquiz-repeater-redirect">
             <li className="head">

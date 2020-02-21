@@ -48,25 +48,27 @@ class WPQuiz_Admin {
         );
     }
 
-    function quiz_page()
-    {
+    function quiz_page() {
         echo '<div id="wpquiz-app" class="wpquiz-app"></div>';
     }
 
-    function save_quiz()
-    {
+    function save_quiz() {
         $post = $_POST;
-        $questions = isset($post['questions']) ? $post['questions'] : array();
-        unset($post['questions']);
+        $post['questions'] = isset($post['questions']) ? $post['questions'] : array();
 
         $post_id = wp_insert_post($post);
-        update_post_meta($post_id, 'questions', $questions);
 
-        wp_send_json($questions);
+        $metas = ['questions', 'quiz_button', 'redirect', 'redirects'];
+        if ( $post_id ) {
+            foreach ($metas as $key) {
+                update_post_meta($post_id, $key, $post[$key]);
+            }
+        }        
+
+        wp_send_json($post);
     }
 
-    function get_quizzes()
-    {
+    function get_quizzes() {
         wp_send_json($this->wpquiz->get_quizzes());
     }
 
@@ -81,3 +83,5 @@ class WPQuiz_Admin {
         wp_send_json($this->wpquiz->get_quiz($post_id));
     }
 }
+
+new WPQuiz_Admin();
