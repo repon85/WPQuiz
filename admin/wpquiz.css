@@ -38,14 +38,17 @@ table.wpquizes .title {font-size: 16px}
 .wpquiz-btn {
     color: #333;
     font-size: 15px;
-    padding: 5px 14px;
-    display: inline-block;
-    text-decoration: none;
     cursor: pointer;
     font-weight: 600;
+    padding: 5px 14px;
+    display: inline-flex;
+    text-decoration: none;
+    align-items: center;
     background-color: #FECF2F;
     border-radius: 50px;
 }
+
+.wpquiz-btn .dashicons {margin-left: -3px; margin-right: 5px}
 
 .wpquiz-btn:hover {color: #333;}
 
@@ -58,6 +61,7 @@ table.wpquizes .title {font-size: 16px}
 .wpquiz-btn.purple {color: #fff; font-weight: 500!important; background-color: #8D00B1}
 
 
+.wpquiz-btn+.wpquiz-btn {margin-left: 7px}
 
 .wpquizes .meta {
     color: #778699;
@@ -105,13 +109,11 @@ table.wpquizes .title {font-size: 16px}
 .wpquiz header .btn-save {margin-left: 8px; padding-left: 10px}
 
 .wpquiz header .btn-save .dashicons {
-    content: "\f531";
     margin-right: 3px;
     text-align: center;
     font-size: 20px;
     width: 20px;
     line-height: 20px;
-    font-family: dashicons;
 }
 
 .wpquiz header .btn-save.saving .dashicons {
@@ -208,22 +210,48 @@ ul.answers>li:before {
     text-align: right;
 }
 
-ul.answers>li input {
+ul.answers>li>.title {
+    padding: 8px 15px;
+}
+
+ul.answers>li>* {
     padding: 0;
     height: auto;
     border: none;
-    padding: 8px 15px;
-    flex: 1;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     background-color: transparent;
 }
 
+ul.answers>li>.title {flex: 1}
+
+ul.answers>li .score {
+    flex: 0 0 auto;
+    width: 60px;
+    text-align: center;
+    border-right: 1px solid #E6E6E6;
+}
+
 ul.answers>li .btn-remove {
-    padding: 10px;
-    align-self: center;
-    cursor: pointer;
+    width: 40px;
     display: none;
+    padding: 10px;
+    cursor: pointer;
+    align-self: center;
 }
 
 ul.answers>li:hover>.btn-remove {
     display: block;
 }
+
+ul.answers>li.head:before {content: none}
+
+ul.answers>li.head {font-size: 13px; font-weight: 600; background-color: #E6E6E6;}
+ul.answers>li.head>* {padding-top: 5px;padding-bottom: 5px}
+ul.answers>li.head>.score {padding-left: 0; padding-right: 0;}
+
+ul.answers>li>input::placeholder{font-size: 13px}
