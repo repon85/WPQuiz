@@ -46,7 +46,7 @@ class WP_Quiz {
 
 		$quiz = $this->get_quiz($atts['id']);        
 
-		var_dump($quiz);
+		var_dump($quiz->questions);
 	 
 		return null;
 	}
