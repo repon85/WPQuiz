@@ -25,6 +25,11 @@ const Question = props => {
     answers.push({ label: "" });
     update({ label, answers });
   };
+  
+  const removeAnswer = (i) => {
+    answers.splice(i, 1);
+    update({ label, answers });
+  };
 
   const updateAnswer = (value, i) => {
     answers[i].label = value;
@@ -33,7 +38,7 @@ const Question = props => {
 
   return (
     <div className="question">
-      <h3 className="label">Question</h3>
+      <h3 className="label">{props.index+1}. Question</h3>
       <input
         defaultValue={question.label}
         onChange={e => update({ ...question, label: e.target.value })}
@@ -42,7 +47,7 @@ const Question = props => {
 
       <div className="label">
         <h3>Answers</h3>
-        You may add many answer by clicking on below button.
+        You may add many answer by clicking on below button. Hover on answer item for seeing options.
         <div className="gap-5" />
         <span
           className="wpquiz-btn purple small"
@@ -58,6 +63,8 @@ const Question = props => {
               defaultValue={q.label}
               onChange={e => updateAnswer(e.target.value, i)}
             />
+
+            <span onClick={removeAnswer.bind(this, i)} class="btn-remove dashicons dashicons-no-alt"></span>
           </li>
         ))}
       </ul>
