@@ -1,91 +1,143 @@
 import React, { useState, useEffect } from "react";
+import validator from 'validator';
+import Redirect from './Redirect';
 import Question from "./Question";
 
 const axios = require("axios").default;
 const qs = require("qs");
 
 const Quiz = props => {
-  const [quiz, setQuiz] = useState({
-    add: false,
-    ID: 0,
-    saving: false,
-    post_title: "",
-    questions: []
-  });
+    const [quiz, setQuiz] = useState({
+        add: false,
+        ID: 0,
+        saving: false,
+        post_title: "",
+        post_content: "",
+        redirect: 'http://growsured.me/2020/01/20/hello-world/',
+        redirects: [],
+        questions: []
+    });
 
-  const { questions } = quiz;
+    const { redirect, redirects, questions } = quiz;
 
-  useEffect(() => {
-    axios
-      .get(WPQuiz.url, {
-        params: {
-          action: "get_quiz",
-          id: props.match.params["id"]
+    useEffect(() => {
+        axios
+            .get(WPQuiz.url, {
+                params: {
+                    action: "get_quiz",
+                    id: props.match.params["id"]
+                }
+            })
+            .then(result => {
+                const questions = Array.isArray(result.data["questions"])
+                    ? result.data["questions"]
+                    : [];
+                setQuiz({ ...quiz, ...result.data, questions });
+            })
+            .catch(err => console.log(err));
+    }, [props.match.params["quiz"]]);
+
+    const sanitizeQuestion = question => Object.assign({ label: "", answers: [] }, question);
+
+    const saveQuiz = () => {
+        if (!validator.isURL(redirect)) {
+            return alert('Redirect URL is not Valid.');
         }
-      })
-      .then(result => {
-        const questions = Array.isArray(result.data["questions"])
-          ? result.data["questions"]
-          : [];
-        setQuiz({ ...quiz, ...result.data, questions });
-      })
-      .catch(err => console.log(err));
-  }, [props.match.params["quiz"]]);
 
-  const sanitizeQuestion = question =>
-    Object.assign({ label: "", answers: [] }, question);
+        const has = redirects.findIndex(u => !validator.isURL(u.url));
+        if ( has > -1 ) {
+            return alert("One or more redirect URL is not valid.");
+        }
 
-  const saveQuiz = () => {
-    setQuiz({ ...quiz, saving: true });
-    axios
-      .post(`${WPQuiz.url}?action=save_quiz`, qs.stringify(quiz))
-      .finally(() => setQuiz({ ...quiz, saving: false }));
-  };
+        setQuiz({ ...quiz, saving: true });
+        axios
+            .post(`${WPQuiz.url}?action=save_quiz`, qs.stringify(quiz))
+            .finally(() => setQuiz({ ...quiz, saving: false }));
+    };
 
-  const addQuestion = () => {
-    questions.push({ label: "", answers: [] });
-    setQuiz({ ...quiz, questions });
-  };
+    const add_url = () => {
+        redirects.push({ min: '', max: '', url: "" });
+        setQuiz({...quiz, redirects})
+    }
 
-  const updateQuestion = (data, index) => {
-    questions[index] = data;
-    setQuiz({ ...quiz, questions });
-  };
+    const handleUrl = (redirects) => setQuiz({...quiz, redirects})
 
-  return (
-    <React.Fragment>
-      <div className="wpquiz-header">
-        <h2>WPQuiz Builder</h2>
-      </div>
+    const addQuestion = () => {
+        questions.push({ label: "", answers: [] });
+        setQuiz({ ...quiz, questions });
+    };
 
-      <div className="wpquiz">
-        <header>
-          <h3>{quiz.post_title}</h3>
-          <span
-            class="dashicons dashicons-plus"
-            onClick={addQuestion.bind(this)}
-          ></span>
-          <span
-            style={{ marginLeft: "auto" }}
-            className={`btn-save wpquiz-btn ${quiz.saving && "saving"}`}
-            onClick={saveQuiz.bind(this)}
-          >
-            <span class="dashicons dashicons-update"></span>
-            Save Quiz
-          </span>
-        </header>
+    const updateQuestion = (data, index) => {
+        questions[index] = data;
+        setQuiz({ ...quiz, questions });
+    };
 
-        {questions.map((q, i) => (
-          <Question
-            update={updateQuestion}
-            key={i}
-            index={i}
-            question={sanitizeQuestion(q)}
-          />
-        ))}
-      </div>
-    </React.Fragment>
-  );
+    console.log(quiz);
+
+    return (
+        <React.Fragment>
+            <div className="wpquiz-header">
+                <h2>WPQuiz Builder</h2>
+            </div>
+
+            <div className="wpbox">
+                <header>
+                    <h3 className="title">{quiz.post_title}</h3>
+                    <span className={`btn-save tools wpquiz-btn ${quiz.saving && "saving"}`} onClick={saveQuiz.bind(this)}>
+                        <i class="dashicons dashicons-update"></i> Save Quiz
+                    </span>
+                </header>
+
+                <div className="wpquiz-form-row">
+                    <div className="label">
+                        <h3 className="title">Description</h3>
+                        Write Description for showing on start quiz page.
+                    </div>
+
+                    <textarea rows={3} />
+
+                    <div className="label">
+                        <h3 className="title">Start Quiz Button Text</h3>
+                        Default text is "<strong>Start Quiz</strong>". If You want to customize text write on right field
+                    </div>
+
+                    <input />
+
+                    <div className="label">
+                        <h3 className="title">Redirect URL</h3>
+                        Default se redirect URL. Please use url with http/https.
+                        <div className="gap-5" />
+                        <span onClick={add_url} className="wpquiz-btn purple small">Add More</span>
+                    </div>
+
+                    <div>
+                        <input defaultValue={redirect} onChange={(e) => setQuiz({ ...quiz, redirect: e.target.value })} className="block" type="url" />
+                        <div className="gap" />
+                        {redirects.length > 0 && <Redirect update={handleUrl.bind(this)} redirects={redirects} />}
+                    </div>
+
+                </div>
+            </div>
+
+            <div className="wpbox">
+                <header>
+                    <h3 className="title">Questions - {quiz.post_title}</h3>
+                    <span class="tools wpquiz-btn" onClick={addQuestion.bind(this)}>
+                        <i class="dashicons dashicons-plus"></i> Add Question
+                    </span>
+                </header>
+
+                {questions.map((q, i) => (
+                    <Question
+                        update={updateQuestion}
+                        key={i}
+                        index={i}
+                        question={sanitizeQuestion(q)}
+                    />
+                ))}
+            </div>
+        </React.Fragment>
+    );
 };
 
 export default Quiz;

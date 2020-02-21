@@ -1,3 +1,9 @@
+.wpquiz-app, .wpquiz-app * {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
 #wpquiz-app {
 	line-height: 1.7;
 	padding-right: 30px;
@@ -12,6 +18,59 @@
 .gap-5 {
 	height: 5px;
 }
+
+.wpquiz-app .block {width: 100%; display: block}
+
+.wpquiz-app input, .wpquiz-app textarea {
+	color: #333;
+	height: auto;
+	font-size: 15px;
+	font-weight: 500;
+	padding: 5px 15px;
+	line-height: 34px;
+	border: 1px solid #ddd;
+	background-color: #fafafa;
+	border-radius: 4px;
+	outline: none!important;
+}
+
+
+.wpbox {
+	--gap: 30px;
+    --bdcolor: #e6e6e6;
+    margin-bottom: 30px;
+	padding: 40px var(--gap);
+	background-color: #fff;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+
+.wpbox header {
+	display: flex;
+	align-items: center;
+	min-height: 40px;
+	padding: 10px var(--gap);
+	margin: -40px calc(var(--gap) * -1) 30px !important;
+	border-bottom: 1px solid var(--bdcolor);
+}
+
+.wpbox header>* {margin-right: 5px}
+.wpbox header>*:last-child {margin-right: 0}
+
+.wpbox header .tools {margin-left: auto}
+.wpbox header h3.title {margin-top: 0; margin-bottom: 0}
+
+
+
+
+
+
+
+
+
+
+
 
 .wpquiz-header {
 	min-height: 90px;
@@ -54,6 +113,24 @@ table.wpquizes .title {
 	font-size: 16px;
 }
 
+
+
+
+
+@keyframes saving {
+	to {
+		transform: rotateZ(360deg);
+	}
+}
+
+@-webkit-keyframes saving {
+	to {
+		transform: rotateZ(360deg);
+	}
+}
+
+
+
 .wpquiz-btn {
 	color: #333;
 	font-size: 15px;
@@ -92,46 +169,6 @@ table.wpquizes .title {
 	margin-left: 7px;
 }
 
-.wpquizes .meta {
-	color: #778699;
-	display: block;
-	margin-top: 3px;
-	font-size: 12px;
-}
-
-.wpquiz {
-	--gap: 30px;
-	--bdcolor: #e6e6e6;
-	padding: 40px var(--gap);
-	background-color: #fff;
-	border-radius: 4px;
-}
-
-.wpquiz header {
-	display: flex;
-	align-items: center;
-	min-height: 40px;
-	padding: 10px var(--gap);
-	margin: -40px calc(var(--gap) * -1) 30px !important;
-	border-bottom: 1px solid var(--bdcolor);
-}
-
-.wpquiz header h3 {
-	margin: 0;
-}
-
-@keyframes saving {
-	to {
-		transform: rotateZ(360deg);
-	}
-}
-
-@-webkit-keyframes saving {
-	to {
-		transform: rotateZ(360deg);
-	}
-}
-
 .btn-save {
 	margin-left: 8px;
 	padding-left: 10px;
@@ -147,92 +184,65 @@ table.wpquizes .title {
 	animation: saving 1s infinite ease-in-out;
 }
 
-.question {
+
+
+.wpquizes .meta {
+	color: #778699;
+	display: block;
+	margin-top: 3px;
+	font-size: 12px;
+}
+
+
+.wpquiz-form-row {
 	display: grid;
 	row-gap: 30px;
 	column-gap: 50px;
-	padding-bottom: 50px;
+	margin-bottom: 30px;
+	padding-bottom: 30px;
 	border-bottom: 1px solid #ddd;
-	margin-bottom: 50px;
 	align-items: flex-start;
 	grid-template-columns: 220px 1fr;
 }
 
-.question:last-child {
+.wpquiz-form-row:last-child {
 	margin-bottom: 0;
 	padding-bottom: 0;
 	border-bottom: none;
 }
 
-.question > .label {
-	margin-top: 8px;
-}
+.wpquiz-form-row > .label:not(.aligned) {margin-top: 8px}
+.wpquiz-form-row .label .title {margin: 0; font-size: 16px}
+.wpquiz-form-row > div.label {color: #888; font-size: 13px}
 
-.question > h3.label {
-	margin-top: 10px;
-}
 
-.question > h3.label,
-.question > div.label h3 {
-	margin-bottom: 0;
-	font-size: 16px;
-}
-
-.question > div.label h3 {
-	margin: 0;
-}
-
-.question > div.label {
-	color: #888;
-	font-size: 13px;
-}
-
-.question input {
-	color: #333;
-	height: auto;
-	font-size: 15px;
-	font-weight: 500;
-	padding: 5px 15px;
-	line-height: 34px;
-	border: 1px solid #ddd;
-	background-color: #fafafa;
-	border-radius: 4px;
-	outline: none !important;
-}
-
-ul.answers {
-	border-radius: 5px;
-}
-
-ul.answers > li {
-	border: 1px solid #e6e6e6;
-}
-
-.question ul.answers {
-	margin: 0;
+ul.wpquiz-repeater {
+    margin: 0;
 	padding: 0;
 	font-size: 16px;
 	list-style: none;
+    border-radius: 5px;
 }
 
-ul.answers > li {
-	min-height: 18px;
+ul.wpquiz-repeater > li {
+	min-height: 40px;
 	position: relative;
 	margin-bottom: -1px;
-	display: flex;
+    display: flex;
+    border: 1px solid #e6e6e6;
 }
 
-ul.answers > li:first-child {
+ul.wpquiz-repeater > li:first-child {
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 }
 
-ul.answers > li:last-child {
+ul.wpquiz-repeater > li:last-child {
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 }
 
-ul.answers > li:before {
+ul.wpquiz-repeater > li:before {
 	content: attr(data-no) ".";
 	position: absolute;
 	left: -32px;
@@ -245,14 +255,10 @@ ul.answers > li:before {
 	text-align: right;
 }
 
-ul.answers > li > .title {
-	padding: 8px 15px;
-}
-
-ul.answers > li > * {
-	padding: 0;
+ul.wpquiz-repeater > li > * {
 	height: auto;
-	border: none;
+    border: none;
+    padding: 0;
 	border-radius: 0;
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
@@ -262,18 +268,16 @@ ul.answers > li > * {
 	background-color: transparent;
 }
 
-ul.answers > li > .title {
-	flex: 1;
-}
+ul.wpquiz-repeater > li > .main {padding: 8px 15px; flex: 1;}
 
-ul.answers > li .score {
+ul.wpquiz-repeater > li .number {
 	flex: 0 0 auto;
 	width: 60px;
 	text-align: center;
 	border-right: 1px solid #e6e6e6;
 }
 
-ul.answers > li .btn-remove {
+ul.wpquiz-repeater > li .btn-remove {
 	width: 40px;
 	display: none;
 	padding: 10px;
@@ -281,30 +285,25 @@ ul.answers > li .btn-remove {
 	align-self: center;
 }
 
-ul.answers > li:hover > .btn-remove {
-	display: block;
-}
+ul.wpquiz-repeater > li:hover > .btn-remove {display: block}
+ul.wpquiz-repeater > li.head:before {content: none}
 
-ul.answers > li.head:before {
-	content: none;
-}
-
-ul.answers > li.head {
+ul.wpquiz-repeater > li.head {
 	font-size: 13px;
-	font-weight: 600;
+    font-weight: 600;
+    min-height: 25px;
 	background-color: #e6e6e6;
 }
 
-ul.answers > li.head > * {
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
-ul.answers > li.head > .score {
-	padding-left: 0;
-	padding-right: 0;
-}
-
-ul.answers > li > input::placeholder {
-	font-size: 13px;
+ul.wpquiz-repeater > li.head > * {padding-top: 5px; padding-bottom: 5px}
+ul.wpquiz-repeater > li.head > .number {padding-left: 0; padding-right: 0}
+ul.wpquiz-repeater > li > input::placeholder {font-size: 13px}
+ul.wpquiz-repeater > li.head>.btn-add {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    padding-top: 3px;
+    line-height: 1;
+    border-radius: 50px;
+    transform: translateY(-50%);
 }

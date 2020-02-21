@@ -32,7 +32,7 @@ const Question = props => {
     }
 
     return (
-        <div className="question">
+        <div className="wpquiz-form-row">
             <h3 className="label">{props.index + 1}. Question</h3>
             <input
                 defaultValue={label}
@@ -40,34 +40,30 @@ const Question = props => {
                 placeholder="Write question here"
             />
 
-            <div className="label">
-                <h3>Answers</h3>
+            <div className="label aligned">
+                <h3 className="title">Answers</h3>
                 You may add many answer by clicking on below button. Hover on answer
                 item for seeing options.
-        <div className="gap-5" />
-                <span
-                    className="wpquiz-btn purple small"
-                    onClick={addAnswer.bind(this)}
-                >
-                    Add New
-        </span>
+                <div className="gap-5" />
+                <span className="wpquiz-btn purple small" onClick={addAnswer.bind(this)}>Add New</span>
             </div>
-            <ul className="answers">
+
+            <ul className="wpquiz-repeater answers">
                 <li className="head">
-                    <span className="score">Score</span>
-                    <span className="title">Title</span>
+                    <span className="number">Score</span>
+                    <span className="main">Title</span>
                 </li>
                 {answers.map((q, i) => (
                     <li contenteditable={true} key={i} data-no={i + 1}>
                         <input
-                            className="score"
+                            className="number"
                             value={q.score}
                             placeholder="Score"
                             onChange={e => updateAnswer({ score: e.target.value }, i)}
                         />
 
                         <input
-                            className="title"
+                            className="main"
                             value={q.label}
                             placeholder="Title"
                             onChange={e => updateAnswer({ label: e.target.value }, i)}
