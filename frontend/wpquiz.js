@@ -1,22 +1,27 @@
-(function($){
-    $('.wpquiz-wrapper').each(function(){
-        currentQuiz = $(this).addClass('initialized');
-        currentQuiz.find('.wpq-question-item').eq(0).addClass('active');
-    })
+Vue.component('wpquiz', {
+    props: ['data'],
+    template: '#wpquiz-template',
+    data: function () {
+        questions = [];
+        try {
+            questions = JSON.parse(this.data)
+        } catch (error) {}
 
-    $('.quiz-answer').on('click', function(){
-        question = $(this).closest('.wpq-question-item');
+        return {step: 0, scores: [], questions}
+    },
+    computed: {
+        currentStep: function() {
+            return this.questions[this.step] || false;
+        }
+    },
+    methods: {
+        next: function(answer){
+            this.scores[this.step] = parseInt(answer.score) || 1;
+            this.step+=1;
+        }
+    }
+})
 
-        next = question.next('.wpq-question-item');
-
-        question.removeClass('active')
-
-        next.addClass('active').css({
-            'transform': 'translateX(0)'
-        })
-
-
-
-    })
-
-})(jQuery)
+new Vue({
+    el: '#page-container'
+})

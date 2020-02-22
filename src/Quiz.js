@@ -15,11 +15,17 @@ const Quiz = props => {
         post_content: "",
         redirect: '',
         redirects: [],
+        redirect_seconds: '',
         questions: [],
-        quiz_button: ''
+        quiz_button: '',
+        start_page: false,
+        result_page: {
+            show: false,
+            content: ''
+        }
     });
 
-    const { redirect, redirects, questions } = quiz;
+    const { redirect, redirects, questions, start_page, result_page } = quiz;
 
     useEffect(() => {
         axios
@@ -94,20 +100,6 @@ const Quiz = props => {
 
                 <div className="wpquiz-form-row">
                     <div className="label">
-                        <h3 className="title">Description</h3>
-                        Write Description for showing on start quiz page.
-                    </div>
-
-                    <textarea rows={3} />
-
-                    <div className="label">
-                        <h3 className="title">Quiz Button Text</h3>
-                        Default text is "<strong>Start Quiz</strong>". If You want to customize text write on right field
-                    </div>
-
-                    <input onChange={(e) => update('quiz_button', e.target.value)} defaultValue={quiz.quiz_button} />
-
-                    <div className="label">
                         <h3 className="title">Redirect URL</h3>
                         Default se redirect URL. Please use url with http/https.
                         <div className="gap-5" />
@@ -120,7 +112,39 @@ const Quiz = props => {
                         {(redirects && redirects.length > 0) && <Redirect update={handleUrl.bind(this)} redirects={redirects} />}
                     </div>
 
+                    <div className="label aligned">
+                        <h3 className="title">Redirect After</h3>
+                        Wait for second before redirecting to targeted URL.<br/><b>Default:</b> Redirect immeiately
+                    </div>
+                    <div>
+                        <input style={{width: '80px'}} />
+                    </div>
                 </div>
+            </div>
+
+
+            <div className={`wpbox ${!start_page && 'nobody'}`}>
+                <header>
+                    <h3 className="title">Show Start Page</h3>
+                    <input checked={quiz.start_page} type="checkbox" onChange={(e) => update('start_page', e.target.checked)} className="switch tools" />
+                </header>
+
+                {start_page &&
+                    <div className="wpquiz-form-row">
+                        <div className="label aligned">
+                            <h3 className="title">Description</h3>
+                            Write Description for showing on start quiz page.
+                        </div>
+
+                        <textarea rows={3} />
+
+                        <div className="label">
+                            <h3 className="title">Quiz Button Text</h3>
+                            Default text is "<strong>Start Quiz</strong>". If You want to customize text write on right field
+                        </div>
+                        <input onChange={(e) => update('quiz_button', e.target.value)} defaultValue={quiz.quiz_button} />
+                    </div>
+                }
             </div>
 
             <div className="wpbox">
@@ -139,6 +163,23 @@ const Quiz = props => {
                         question={sanitizeQuestion(q)}
                     />
                 ))}
+            </div>
+
+            <div className={`wpbox ${!result_page.show && 'nobody'}`}>
+                <header>
+                    <h3 className="title">Result Page</h3>
+                    <input checked={result_page.show} type="checkbox" onChange={(e) => update('result_page', {...result_page, show: e.target.checked})} className="switch tools" />
+                </header>
+
+                {result_page.show &&
+                    <div className="wpquiz-form-row">
+                        <div className="label aligned">
+                            <h3 className="title">Content</h3>
+                            Write Description for showing on start quiz page.
+                        </div>
+                        <textarea rows={3} />
+                    </div>
+                }
             </div>
         </React.Fragment>
     );

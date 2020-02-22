@@ -12,11 +12,17 @@ class WPQuiz_Frontend {
 
         add_shortcode( 'wpquiz', array($this, 'shortcode'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        add_action( 'wp_footer', array($this, 'wpquiz_template'));
     }
 
     function enqueue_scripts() {
         wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'wpquiz.css');
+        wp_enqueue_script('vue', plugin_dir_url(__FILE__) . 'vue.js');
         wp_enqueue_script($this->name, plugin_dir_url(__FILE__) . 'wpquiz.js', array('jquery'), time(), true);
+    }
+
+    function wpquiz_template() {
+        require_once('quiz-template.html');
     }
 
     function shortcode($atts) {
@@ -25,8 +31,6 @@ class WPQuiz_Frontend {
         if ( !$quiz ) return null;
 
         $questions = $quiz->questions;
-
-        $content = '<div class="wpquiz-wrapper">';
 
         foreach ($questions as $question) {
             if (strlen($question['label']) <= 2 ) continue;
@@ -37,23 +41,10 @@ class WPQuiz_Frontend {
             foreach ($answers as &$answer) {
                 $answer['score'] = strlen($answer['score']) > 0 ? absint($answer['score']) : 1;
             }
-
-            if ( count($answers) <= 0 ) continue;
-            ob_start(); ?>
-            <div class="wpq-question-item">
-                <h3 class="quiz-question"><?php echo $question['label'] ?></h3>
-                <div class="quiz-answers">
-                    <?php foreach ($answers as $ans) : ?>
-                    <span class="quiz-answer"><?php echo $ans['label'] ?></span>
-                    <?php endforeach; ?>
-                </div>                    
-            </div>
-            <?php
-            $content .= ob_get_clean();
         }
 
-	 
-		return $content . '</div>';
+        $json = wp_json_encode($questions);
+        return "<wpquiz data='$json'></wpquiz>";
 	}
 }
 
