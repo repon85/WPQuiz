@@ -13,7 +13,7 @@
  * @package           WPQuiz
  *
  * @wordpress-plugin
- * Plugin Name:       WPQuiz
+ * Plugin Name:       WP Quiz
  * Plugin URI:        http://example.com/wpquiz-uri/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0

@@ -16,6 +16,9 @@ class WPQuiz_Admin {
         add_action('wp_ajax_save_quiz', array($this, 'save_quiz'));
         add_action('wp_ajax_nopriv_save_quiz', array($this, 'save_quiz'));
 
+        add_action('wp_ajax_delete_quiz', array($this, 'delete_quiz'));
+        add_action('wp_ajax_nopriv_delete_quiz', array($this, 'delete_quiz'));
+
         add_action('wp_ajax_get_quizzes', array($this, 'get_quizzes'));
         add_action('wp_ajax_nopriv_get_quizzes', array($this, 'get_quizzes'));
 
@@ -28,7 +31,8 @@ class WPQuiz_Admin {
         wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'wpquiz.css');
         wp_enqueue_script($this->name, plugin_dir_url(__FILE__) . 'wpquiz.js', array(), time(), true);
         wp_localize_script($this->name, 'WPQuiz', array(
-            'url' => admin_url('admin-ajax.php')
+            'url' => admin_url('admin-ajax.php'),
+            'page' => admin_url('admin.php?page=wpquiz')
         ));
     }
 
@@ -43,23 +47,30 @@ class WPQuiz_Admin {
     function save_quiz() {
         $post = $_POST;
         $post['questions'] = isset($post['questions']) ? $post['questions'] : array();
+        $post['post_type'] = 'wpquiz';
+        $post['post_status'] = 'publish';
 
         $post_id = wp_insert_post($post);
         if ( $post_id ) {
             foreach ($this->wpquiz->meta_fields as $key) {
                 update_post_meta($post_id, $key, $post[$key]);
             }
-        }        
+        }
 
-        wp_send_json($post);
+        wp_send_json($this->wpquiz->get_quiz($post_id));
+    }
+
+    function delete_quiz() {
+        $id = isset($_REQUEST['id']) ? absint($_REQUEST['id']) : false;
+        $res = wp_delete_post($id, true);
+        wp_send_json($res);        
     }
 
     function get_quizzes() {
         wp_send_json($this->wpquiz->get_quizzes());
     }
 
-    function get_quiz()
-    {
+    function get_quiz() {
         $post_id = isset($_REQUEST['id']) ? absint($_REQUEST['id']) : false;
 
         if (!$post_id) {

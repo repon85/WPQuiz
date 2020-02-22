@@ -31,13 +31,12 @@ const Quiz = props => {
     const { redirect, redirects, questions, start_page, redirect_seconds, result_page } = quiz;
 
     useEffect(() => {
+        if(!props.match.params["id"]) {
+            return;
+        }
+
         axios
-            .get(WPQuiz.url, {
-                params: {
-                    action: "get_quiz",
-                    id: props.match.params["id"]
-                }
-            })
+            .get(WPQuiz.url, {params: {action: "get_quiz", id: props.match.params["id"]}})
             .then(result => {
                 const data = result.data;
                 ['questions', 'redirects'].forEach(key => {
@@ -62,9 +61,13 @@ const Quiz = props => {
         }
 
         setQuiz({ ...quiz, saving: true });
-        axios
-            .post(`${WPQuiz.url}?action=save_quiz`, qs.stringify(quiz))
-            .finally(() => setQuiz({ ...quiz, saving: false }));
+        axios.post(`${WPQuiz.url}?action=save_quiz`, qs.stringify(quiz))
+            .then(result => {
+                if ( !props.match.params["id"] && result.data && result.data.ID > 0 ) {
+                    window.location = `${WPQuiz.page}#/${result.data.ID}/${result.data.post_name}`;
+                    return;
+                }
+            }).finally(() => setQuiz({ ...quiz, saving: false }));
     };
 
     const update = (key, value) => {
@@ -100,7 +103,7 @@ const Quiz = props => {
 
             <div className="wpbox">
                 <header>
-                    <h3 className="title">{quiz.post_title}</h3>
+                    <input onChange={e => update('post_title', e.target.value)} className="title input-text" placeholder="Quiz Title" defaultValue={quiz.post_title} />
                 </header>
 
                 <div className="wpquiz-form-row">

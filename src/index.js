@@ -9,6 +9,7 @@ const WPQuizApp = () => {
   return (
     <HashRouter>
       <Route exact path="/" component={App} />
+      <Route exact path="/add-quiz" component={Quiz} />
       <Route exact path="/:id/:quiz" component={Quiz} />
     </HashRouter>
   );
