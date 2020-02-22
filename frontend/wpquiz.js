@@ -42,7 +42,7 @@ Vue.component('wpquiz', {
             score = this.scores.reduce((total, current) => total+current);
             redirect = redirects.find(item => score >= item.min && score <= item.max)
             get_url = redirect && redirect.url || quiz.redirect;
-            window.open(get_url, '_blank');
+            window.location = get_url;
         }
     },
     watch: {
