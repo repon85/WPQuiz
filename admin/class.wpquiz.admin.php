@@ -4,8 +4,7 @@ class WPQuiz_Admin {
     var $wpquiz;
     var $name = 'wpquiz';
 
-    function __construct()
-    {
+    function __construct() {
         if (!is_admin()) return;
 
         global $WP_Quiz;
@@ -13,7 +12,6 @@ class WPQuiz_Admin {
 
         add_action('admin_menu', array($this, 'admin_menu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
-
 
         add_action('wp_ajax_save_quiz', array($this, 'save_quiz'));
         add_action('wp_ajax_nopriv_save_quiz', array($this, 'save_quiz'));
@@ -25,8 +23,7 @@ class WPQuiz_Admin {
         add_action('wp_ajax_nopriv_get_quiz', array($this, 'get_quiz'));
     }
 
-    function enqueue_scripts($hook)
-    {
+    function enqueue_scripts($hook) {
         if ($hook !== 'toplevel_page_wpquiz') return;
         wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'wpquiz.css');
         wp_enqueue_script($this->name, plugin_dir_url(__FILE__) . 'wpquiz.js', array(), time(), true);
@@ -35,17 +32,8 @@ class WPQuiz_Admin {
         ));
     }
 
-    function admin_menu()
-    {
-        add_menu_page(
-            __('WP Quiz', 'textdomain'),
-            'WP Quiz',
-            'manage_options',
-            'wpquiz',
-            array($this, 'quiz_page'),
-            plugin_dir_url(__FILE__) . 'icon-book-quiz.svg',
-            6
-        );
+    function admin_menu() {
+        add_menu_page(__('WP Quiz', 'textdomain'), 'WP Quiz', 'manage_options', 'wpquiz', array($this, 'quiz_page'), 'dashicons-format-status', 99);
     }
 
     function quiz_page() {
@@ -57,10 +45,8 @@ class WPQuiz_Admin {
         $post['questions'] = isset($post['questions']) ? $post['questions'] : array();
 
         $post_id = wp_insert_post($post);
-
-        $metas = ['questions', 'quiz_button', 'redirect', 'redirects'];
         if ( $post_id ) {
-            foreach ($metas as $key) {
+            foreach ($this->wpquiz->meta_fields as $key) {
                 update_post_meta($post_id, $key, $post[$key]);
             }
         }        

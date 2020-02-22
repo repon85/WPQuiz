@@ -1,38 +1,11 @@
-.fade-enter-active, .fade-leave-active {
-    pointer-events: auto;
-    transition: opacity 500ms;
-}
-.fade-enter, .fade-leave-to {
-    opacity: 0;
-    pointer-events: none;
-}
+.fade-enter-active, .fade-leave-active {pointer-events: auto; transition: opacity 500ms}
+.fade-enter, .fade-leave-to {opacity: 0; pointer-events: none}
 
-.wpquiz-wrapper {
-    position: relative;
-    overflow: hidden;
-}
-
-.wpquiz-wrapper .wpq-question-item {
-    text-align: center;
-}
-
-.wpquiz-wrapper:not(.initialized) .wpq-question-item:first-child,
-.wpquiz-wrapper .wpq-question-item.active {
-    position: static;
-    opacity: 1;
-    pointer-events: auto;
-    visibility: visible;
-}
-
-
-
-
+.wpquiz-wrapper {--bg: #135EC7; --btn-min: 0; position: relative; overflow: hidden}
+.wpquiz-wrapper .wpq-question-item {text-align: center}
 .wpq-question-item .quiz-question {text-align: center; font-weight: 700; font-size: 30px;}
 
-.quiz-answers {
-    margin-top: 20px;
-    font-weight: 600;
-}
+.quiz-answers {margin-top: 20px; font-weight: 600}
 
 .quiz-answers .quiz-answer {
     margin: 5px;
@@ -41,6 +14,26 @@
     font-size: 18px;
     padding: 8px 25px;
     display: inline-block;
-    background-color: #135EC7;
+    background-color: var(--bg, #135EC7);
     border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
 }
+
+.wpquiz-content {font-size: 18px; text-align: center}
+.wpquiz-content .title {font-size: 32px; font-weight: 700}
+.wpquiz-button {
+    color: #fff;
+    min-width: 80px;
+    cursor: pointer;
+    text-align: center;
+    padding: 12px 25px;
+    display: inline-block;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    min-width: var(--btn-min, 0);
+    background-color: var(--bg, #135EC7);
+}
+
+.start-page-content {margin-bottom: 15px}

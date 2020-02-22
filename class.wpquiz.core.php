@@ -1,5 +1,6 @@
 <?php
 class WP_Quiz {	
+    var $meta_fields = ['questions', 'redirect', 'redirects', 'start_page', 'redirect_seconds', 'result_page'];
 
 	function __construct() {
 		add_action( 'init', array($this, 'register_quiz_post'));
@@ -27,8 +28,7 @@ class WP_Quiz {
             return $quiz;
         }	
         
-        $metas = ['questions', 'quiz_button', 'redirect', 'redirects'];
-        foreach ($metas as $key) {
+        foreach ($this->meta_fields as $key) {
             $quiz->$key = get_post_meta($quiz->ID, $key, true);
         }
 

@@ -17,15 +17,18 @@ const Quiz = props => {
         redirects: [],
         redirect_seconds: '',
         questions: [],
-        quiz_button: '',
-        start_page: false,
+        start_page: {
+            show: false,
+            button: '',
+            content: ''
+        },
         result_page: {
             show: false,
             content: ''
         }
     });
 
-    const { redirect, redirects, questions, start_page, result_page } = quiz;
+    const { redirect, redirects, questions, start_page, redirect_seconds, result_page } = quiz;
 
     useEffect(() => {
         axios
@@ -38,8 +41,9 @@ const Quiz = props => {
             .then(result => {
                 const data = result.data;
                 ['questions', 'redirects'].forEach(key => {
-                    data[key] = Array.isArray(data[key]) ? result.data[key] : [];
-                })
+                    data[key] = Array.isArray(data[key]) ? data[key] : [];
+                });
+
                 setQuiz({ ...quiz, ...data });
             })
             .catch(err => console.log(err));
@@ -90,12 +94,13 @@ const Quiz = props => {
                 <h2 className="title">WPQuiz Builder</h2>
             </div>
 
+            <span className={`btn-float btn-save wpquiz-btn ${quiz.saving && "saving"}`} onClick={saveQuiz.bind(this)}>
+                <i class="dashicons dashicons-update"></i> Save
+            </span>
+
             <div className="wpbox">
                 <header>
                     <h3 className="title">{quiz.post_title}</h3>
-                    <span className={`btn-save tools wpquiz-btn ${quiz.saving && "saving"}`} onClick={saveQuiz.bind(this)}>
-                        <i class="dashicons dashicons-update"></i> Save Quiz
-                    </span>
                 </header>
 
                 <div className="wpquiz-form-row">
@@ -114,35 +119,34 @@ const Quiz = props => {
 
                     <div className="label aligned">
                         <h3 className="title">Redirect After</h3>
-                        Wait for second before redirecting to targeted URL.<br/><b>Default:</b> Redirect immeiately
+                        Wait for second before redirecting to targeted URL. <b>Default:</b> Redirect immediately
                     </div>
                     <div>
-                        <input style={{width: '80px'}} />
+                        <input defaultValue={redirect_seconds} onChange={e => update('redirect_seconds', e.target.value)} style={{ width: '80px' }} />
                     </div>
                 </div>
             </div>
 
-
-            <div className={`wpbox ${!start_page && 'nobody'}`}>
+            <div className={`wpbox ${!start_page.show && 'nobody'}`}>
                 <header>
                     <h3 className="title">Show Start Page</h3>
-                    <input checked={quiz.start_page} type="checkbox" onChange={(e) => update('start_page', e.target.checked)} className="switch tools" />
+                    <input checked={start_page.show} type="checkbox" onChange={(e) => update('start_page', {...start_page, show: e.target.checked})} className="switch tools" />
                 </header>
 
-                {start_page &&
+                {start_page.show &&
                     <div className="wpquiz-form-row">
                         <div className="label aligned">
                             <h3 className="title">Description</h3>
                             Write Description for showing on start quiz page.
                         </div>
 
-                        <textarea rows={3} />
+                        <textarea onChange={(e) => update('start_page', {...start_page, content: e.target.value})} defaultValue={start_page.content} rows={3} />
 
                         <div className="label">
                             <h3 className="title">Quiz Button Text</h3>
                             Default text is "<strong>Start Quiz</strong>". If You want to customize text write on right field
                         </div>
-                        <input onChange={(e) => update('quiz_button', e.target.value)} defaultValue={quiz.quiz_button} />
+                        <input onChange={(e) => update('start_page', {...start_page, button: e.target.value})} defaultValue={start_page.button} />
                     </div>
                 }
             </div>
@@ -168,7 +172,7 @@ const Quiz = props => {
             <div className={`wpbox ${!result_page.show && 'nobody'}`}>
                 <header>
                     <h3 className="title">Result Page</h3>
-                    <input checked={result_page.show} type="checkbox" onChange={(e) => update('result_page', {...result_page, show: e.target.checked})} className="switch tools" />
+                    <input defaultChecked={result_page.show} type="checkbox" onChange={(e) => update('result_page', { ...result_page, show: e.target.checked })} className="switch tools" />
                 </header>
 
                 {result_page.show &&
@@ -177,7 +181,7 @@ const Quiz = props => {
                             <h3 className="title">Content</h3>
                             Write Description for showing on start quiz page.
                         </div>
-                        <textarea rows={3} />
+                        <textarea defaultValue={result_page.content} onChange={(e) => update('result_page', { ...result_page, content: e.target.value })} rows={3} />
                     </div>
                 }
             </div>

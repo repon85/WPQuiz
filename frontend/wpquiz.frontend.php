@@ -43,8 +43,10 @@ class WPQuiz_Frontend {
             }
         }
 
-        $json = wp_json_encode($questions);
-        return "<wpquiz data='$json'></wpquiz>";
+        if (count($questions) <= 0 ) return null;
+
+        $json = wp_json_encode($quiz);
+        return "<wpquiz quiz='$json'></wpquiz>";
 	}
 }
 

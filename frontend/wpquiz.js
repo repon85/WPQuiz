@@ -1,23 +1,55 @@
 Vue.component('wpquiz', {
-    props: ['data'],
+    props: ['quiz'],
     template: '#wpquiz-template',
     data: function () {
-        questions = [];
+        quiz = {}
         try {
-            questions = JSON.parse(this.data)
+            quiz = JSON.parse(this.quiz)
         } catch (error) {}
-
-        return {step: 0, scores: [], questions}
+        
+        const waiting = parseInt(quiz.redirect_seconds);
+        return {timer: null, step: 0, scores: [], quiz, waiting}
     },
     computed: {
-        currentStep: function() {
+        redirect: () => quiz.redirect || false,
+        redirects: () => quiz.redirects || [],
+        start_page() {
+            return (typeof quiz.start_page == 'object') ? quiz.start_page : {}
+        },
+        result_page() {
+            return (typeof quiz.result_page == 'object') ? quiz.result_page : {}
+        },
+        questions(){
+            return quiz.questions || [];
+        },
+        currentStep() {
             return this.questions[this.step] || false;
         }
     },
     methods: {
-        next: function(answer){
+        next: function(answer) {
             this.scores[this.step] = parseInt(answer.score) || 1;
             this.step+=1;
+        },
+        show_question: function() {
+            this.start_page.show = false
+        }
+    },
+    watch: {
+        currentStep: function() {
+            if ( this.currentStep ) return;
+            var redirects = (Array.isArray(quiz.redirects) ? quiz.redirects : [])            
+            redirects = redirects.filter(r => r.url && r.url.length > 0);
+            redirects = redirects.map(r => ({min: parseInt(r.min) || 0, max: parseInt(r.max) || 0, url: r.url}))
+            score = this.scores.reduce((total, current) => total+current);
+            redirect = redirects.find(item => score >= item.min && score <= item.max)
+            get_url = redirect && redirect.url || quiz.redirect;
+            this.timer = setInterval(() => this.waiting -= 1, 1000);
+        },
+
+        waiting() {
+            if ( this.waiting > 0) return;
+            clearInterval(this.timer);
         }
     }
 })

@@ -1,13 +1,25 @@
 <script type="text/x-template" id="wpquiz-template">
-	<div class="wpquiz-wrapper">
-	    <div v-if="currentStep" class="wpq-question-item">
-	        <h3 class="quiz-question">{{currentStep.label}}</h3>
-	        <div class="quiz-answers">
-	            <span class="quiz-answer" v-on:click="next(answer)" v-for="answer in currentStep.answers">{{answer.label}}</span>
-	        </div>
+	<div class="wpquiz-wrapper" v-if="questions.length">
+        <div class="wpquiz-content wpquiz-start-page" v-if="start_page.show == 'true'">
+            <div class="start-page-content">{{start_page.content}}</div>
+            <span class="wpquiz-button" v-on:click="show_question">{{start_page.button || "Start Now"}}</span>            
         </div>
-        <div v-else>
-            No step available
-        </div>
+        <template v-else>
+            <div v-if="currentStep" class="wpq-question-item">
+                <h3 class="quiz-question">{{currentStep.label}}</h3>
+                <div class="quiz-answers">
+                    <span class="wpquiz-button quiz-answer" v-on:click="next(answer)" v-for="answer in currentStep.answers">{{answer.label}}</span>
+                </div>
+            </div>
+            <div class="wpquiz-content wpquiz-result-page" v-else>
+                <template v-if="result_page.content && result_page.content.length">
+                    {{result_page.content}}
+                </template>
+                <template v-else>
+                    <h3 class="title">Thank you so much</h3>
+                    <p>Wait {{waiting}} seconds for seeing your expected result.</p>
+                </template>
+            </div>
+        </template>
 	</div>
 </script>
