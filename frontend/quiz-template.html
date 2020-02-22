@@ -17,7 +17,8 @@
                 </template>
                 <template v-else>
                     <h3 class="title">Thank you so much</h3>
-                    <p>Wait {{waiting}} seconds for seeing your expected result.</p>
+                    <p v-if="waiting>0">Wait {{waiting}} seconds for seeing your expected result.</p>
+                    <p v-else>We have found best offer for you.</p>
                 </template>
             </div>
         </template>

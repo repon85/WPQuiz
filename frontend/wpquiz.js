@@ -7,12 +7,10 @@ Vue.component('wpquiz', {
             quiz = JSON.parse(this.quiz)
         } catch (error) {}
         
-        const waiting = parseInt(quiz.redirect_seconds);
+        const waiting = parseInt(quiz.redirect_seconds) || 0;
         return {timer: null, step: 0, scores: [], quiz, waiting}
     },
     computed: {
-        redirect: () => quiz.redirect || false,
-        redirects: () => quiz.redirects || [],
         start_page() {
             return (typeof quiz.start_page == 'object') ? quiz.start_page : {}
         },
@@ -33,23 +31,34 @@ Vue.component('wpquiz', {
         },
         show_question: function() {
             this.start_page.show = false
-        }
-    },
-    watch: {
-        currentStep: function() {
-            if ( this.currentStep ) return;
+        },
+
+        redirect: function() {
+            if ( this.currentStep !== false && this.waiting > 0) return;
+            clearInterval(this.timer);
             var redirects = (Array.isArray(quiz.redirects) ? quiz.redirects : [])            
             redirects = redirects.filter(r => r.url && r.url.length > 0);
             redirects = redirects.map(r => ({min: parseInt(r.min) || 0, max: parseInt(r.max) || 0, url: r.url}))
             score = this.scores.reduce((total, current) => total+current);
             redirect = redirects.find(item => score >= item.min && score <= item.max)
             get_url = redirect && redirect.url || quiz.redirect;
+            window.open(get_url, '_blank');
+        }
+    },
+    watch: {
+        currentStep: function() {
+            if ( this.currentStep ) return;
+            if ( this.waiting <= 0 ) {
+                return this.redirect();
+            }
+
             this.timer = setInterval(() => this.waiting -= 1, 1000);
         },
 
         waiting() {
             if ( this.waiting > 0) return;
             clearInterval(this.timer);
+            this.redirect();            
         }
     }
 })
