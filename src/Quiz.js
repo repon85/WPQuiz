@@ -18,12 +18,12 @@ const Quiz = props => {
         redirect_seconds: '',
         questions: [],
         start_page: {
-            show: false,
+            show: '',
             button: '',
             content: ''
         },
         result_page: {
-            show: false,
+            show: '',
             content: ''
         }
     });
@@ -31,12 +31,12 @@ const Quiz = props => {
     const { redirect, redirects, questions, start_page, redirect_seconds, result_page } = quiz;
 
     useEffect(() => {
-        if(!props.match.params["id"]) {
+        if (!props.match.params["id"]) {
             return;
         }
 
         axios
-            .get(WPQuiz.url, {params: {action: "get_quiz", id: props.match.params["id"]}})
+            .get(WPQuiz.url, { params: { action: "get_quiz", id: props.match.params["id"] } })
             .then(result => {
                 const data = result.data;
                 ['questions', 'redirects'].forEach(key => {
@@ -63,7 +63,7 @@ const Quiz = props => {
         setQuiz({ ...quiz, saving: true });
         axios.post(`${WPQuiz.url}?action=save_quiz`, qs.stringify(quiz))
             .then(result => {
-                if ( !props.match.params["id"] && result.data && result.data.ID > 0 ) {
+                if (!props.match.params["id"] && result.data && result.data.ID > 0) {
                     window.location = `${WPQuiz.page}#/${result.data.ID}/${result.data.post_name}`;
                     return;
                 }
@@ -133,7 +133,7 @@ const Quiz = props => {
             <div className={`wpbox ${!start_page.show && 'nobody'}`}>
                 <header>
                     <h3 className="title">Show Start Page</h3>
-                    <input checked={start_page.show} type="checkbox" onChange={(e) => update('start_page', {...start_page, show: e.target.checked})} className="switch tools" />
+                    <input checked={start_page.show=='yes'} type="checkbox" onChange={(e) => update('start_page', { ...start_page, show: e.target.checked ? 'yes' : '' })} className="switch tools" />
                 </header>
 
                 {start_page.show &&
@@ -143,13 +143,13 @@ const Quiz = props => {
                             Write Description for showing on start quiz page.
                         </div>
 
-                        <textarea onChange={(e) => update('start_page', {...start_page, content: e.target.value})} defaultValue={start_page.content} rows={3} />
+                        <textarea onChange={(e) => update('start_page', { ...start_page, content: e.target.value })} defaultValue={start_page.content} rows={3} />
 
                         <div className="label">
                             <h3 className="title">Quiz Button Text</h3>
                             Default text is "<strong>Start Quiz</strong>". If You want to customize text write on right field
                         </div>
-                        <input onChange={(e) => update('start_page', {...start_page, button: e.target.value})} defaultValue={start_page.button} />
+                        <input onChange={(e) => update('start_page', { ...start_page, button: e.target.value })} defaultValue={start_page.button} />
                     </div>
                 }
             </div>
@@ -175,7 +175,7 @@ const Quiz = props => {
             <div className={`wpbox ${!result_page.show && 'nobody'}`}>
                 <header>
                     <h3 className="title">Result Page</h3>
-                    <input defaultChecked={result_page.show} type="checkbox" onChange={(e) => update('result_page', { ...result_page, show: e.target.checked })} className="switch tools" />
+                    <input defaultChecked={result_page.show=='yes'} type="checkbox" onChange={(e) => update('result_page', { ...result_page, show: e.target.checked ? 'yes' : ''})} className="switch tools" />
                 </header>
 
                 {result_page.show &&

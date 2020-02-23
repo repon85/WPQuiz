@@ -1,13 +1,13 @@
 <script type="text/x-template" id="wpquiz-template">
 	<div class="wpquiz-wrapper" v-if="questions.length">
-        <div class="wpquiz-content wpquiz-start-page" v-if="start_page.show == 'true'">
+        <div class="wpquiz-content wpquiz-start-page" v-if="start_page.show == 'yes'">
             <div class="start-page-content">{{start_page.content}}</div>
             <span class="wpquiz-button" v-on:click="show_question">{{start_page.button || "Start Now"}}</span>            
         </div>
         <template v-else>
             <div v-if="currentStep" class="wpq-question-item">
                 <h3 class="quiz-question">{{currentStep.label}}</h3>
-                <div class="quiz-answers">
+                <div v-bind:class="{'quiz-answers': true, block: currentStep.block}">
                     <span class="wpquiz-button quiz-answer" v-on:click="next(answer)" v-for="answer in currentStep.answers">{{answer.label}}</span>
                 </div>
             </div>

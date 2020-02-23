@@ -5,13 +5,16 @@
 .wpquiz-wrapper .wpq-question-item {text-align: center}
 .wpq-question-item .quiz-question {text-align: center; font-weight: 700; font-size: 30px;}
 
-.quiz-answers {margin-top: 20px; font-weight: 600}
+.quiz-answers {margin-top: 20px; font-weight: 600; display: flex; flex-wrap: wrap; align-items: center; justify-content: center}
+.quiz-answers.block {flex-direction: column}
 
 .quiz-answers .quiz-answer {
     margin: 5px;
     color: #fff;
     cursor: pointer;
     font-size: 18px;
+    min-width: 130px;
+    line-height: 1.4!important;
     padding: 8px 25px;
     display: inline-block;
     background-color: var(--bg, #135EC7);

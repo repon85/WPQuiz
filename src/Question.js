@@ -1,7 +1,7 @@
 import React from "react";
 
 const Question = props => {
-    const { label, answers } = props.question;
+    const { label, answers, block } = props.question;
 
     const update = data => {
         props.update({ ...props.question, ...data }, props.index);
@@ -52,6 +52,7 @@ const Question = props => {
                 <li className="head">
                     <span className="number">Score</span>
                     <span className="main">Answer</span>
+                    <span onClick={addAnswer} className="btn-add wpquiz-btn purple small">Add Item</span>
                 </li>
                 {answers.map((q, i) => (
                     <li contenteditable={true} key={i} data-no={i + 1}>
@@ -73,6 +74,12 @@ const Question = props => {
                     </li>
                 ))}
             </ul>
+
+            <h3 className="label">Settings</h3>
+            <div>
+                <input checked={block=='yes'} onChange={e => update({ block: e.target.checked ? 'yes':'' })} style={{width: 80}} type="checkbox" className="switch" data-on="Block" data-off="Inline" />
+                {/* <input style={{width: 60}} type="number" placeholder="Min width" /> */}                
+            </div>
         </div>
     );
 };

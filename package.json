@@ -23,6 +23,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
+    "react-sortable-hoc": "^1.11.0",
     "validator": "^12.2.0"
   },
   "devDependencies": {

@@ -36,6 +36,21 @@
 	border-radius: 4px;
 }
 
+.wpquiz-app input::-webkit-outer-spin-button,
+.wpquiz-app input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.wpquiz-app input[type="number"] {
+    text-align: center;
+    padding-left: 5px!important;
+    padding-right: 5px!important;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
 .wpquiz-app input[type="checkbox"].switch {
     flex: 0 0 auto!important;
     width:50px;
@@ -70,6 +85,20 @@
 .wpquiz-app input[type="checkbox"]:checked.switch:before {
     background-color: #8d00b1;
     left: calc(100% - 24px);
+}
+
+
+.wpquiz-app input[type="checkbox"].switch[data-off] {width: auto; padding-left: 17px!important; text-align: center; line-height: 22px}
+.wpquiz-app input[type="checkbox"].switch[data-off]:checked {padding-left: 0!important; padding-right: 20px!important}
+
+.wpquiz-app input[type="checkbox"].switch[data-off]:after {
+    content: attr(data-off);
+    padding: 0 10px;
+    display: block;
+}
+
+.wpquiz-app input[type="checkbox"].switch[data-off]:checked::after {
+    content: attr(data-on);
 }
 
 .wpquiz-app input.input-text {
